@@ -1,0 +1,13 @@
+{
+  "name": "dropship-orchestrator",
+  "version": "1.0.0",
+  "description": "AI Orchestration Hub for Dropshipping Automation",
+  "main": "public/index.html",
+  "scripts": {
+    "start": "npx serve public",
+    "build": "echo 'No build step required'"
+  },
+  "keywords": ["dropshipping", "ai", "orchestration", "groq"],
+  "author": "Abir Hossain Tamim",
+  "license": "MIT"
+}

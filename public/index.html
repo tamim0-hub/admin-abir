@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>DropShip Orchestrator Pro</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+    <!-- ==================== LOGIN SCREEN ==================== -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-box">
+            <div class="login-icon">
+                <i class="fas fa-robot"></i>
+            </div>
+            <h1>DropShip AI</h1>
+            <p class="login-sub">Orchestration Hub v2.0</p>
+            <form id="loginForm" autocomplete="off">
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="loginEmail" placeholder="ইমেইল" value="abirhossaintamim1820@gmail.com" required />
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="loginPassword" placeholder="পাসওয়ার্ড" value="@bida@bir" required />
+                </div>
+                <button type="submit" class="login-btn">
+                    <i class="fas fa-sign-in-alt"></i> প্রবেশ করুন
+                </button>
+                <p id="loginError" class="login-error"></p>
+            </form>
+            <div class="login-footer">
+                <span>🔒 নিরাপদ সংযোগ</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MAIN APP ==================== -->
+    <div id="appContainer" class="app-container" style="display:none;">
+
+        <!-- HEADER -->
+        <div class="header">
+            <span class="app-title"><i class="fas fa-robot" style="color:#f0b90b;"></i> DropShip AI</span>
+            <span><span class="status-dot"></span> <span style="color:#8899bb; font-size:12px;">24/7 Active</span></span>
+        </div>
+
+        <!-- NAVIGATION TABS -->
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-panel="home"><i class="fas fa-home"></i> Home</button>
+            <button class="nav-tab" data-panel="worker"><i class="fas fa-users"></i> Worker</button>
+            <button class="nav-tab" data-panel="inbox"><i class="fas fa-inbox"></i> Inbox</button>
+            <button class="nav-tab" data-panel="settings"><i class="fas fa-cog"></i> Settings</button>
+        </div>
+
+        <!-- ===== PANEL: HOME ===== -->
+        <div id="panel-home" class="panel active">
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-label">Total Products</div><div class="stat-value gold" id="totalProducts">0</div></div>
+                <div class="stat-card"><div class="stat-label">Today's Orders</div><div class="stat-value green" id="todayOrders">0</div></div>
+                <div class="stat-card"><div class="stat-label">Revenue</div><div class="stat-value blue" id="revenue">$0</div></div>
+                <div class="stat-card"><div class="stat-label">Profit Margin</div><div class="stat-value pink" id="profitDisplayHome">10%</div></div>
+            </div>
+
+            <div class="agent-section">
+                <div class="agent-header"><span class="agent-title"><i class="fas fa-microchip" style="color:#f0b90b;"></i> Active Agents</span><span class="agent-badge" id="agentCount">10 Running</span></div>
+                <div id="agentList"></div>
+            </div>
+
+            <div style="display:flex; gap:8px;">
+                <button class="nav-tab" style="flex:1; background:linear-gradient(135deg,#f0b90b,#e6a800); color:#0a0e17; border:none; border-radius:16px; padding:12px;" id="runAllBtn"><i class="fas fa-play"></i> Run All Agents</button>
+                <button class="nav-tab" style="flex:1; background:rgba(255,255,255,0.06); color:#ccddf9; border:none; border-radius:16px; padding:12px;" id="pauseAllBtn"><i class="fas fa-pause"></i> Pause</button>
+            </div>
+        </div>
+
+        <!-- ===== PANEL: WORKER ===== -->
+        <div id="panel-worker" class="panel">
+            <div class="office-scene">
+                <div class="office-grid" id="officeGrid"></div>
+            </div>
+            <div class="office-footer">
+                <span><i class="fas fa-crown" style="color:#f0b90b;"></i> Boss: <strong id="bossName">mixtral-8x7b</strong></span>
+                <span><i class="fas fa-users"></i> <span id="workerCount">9</span> Workers</span>
+                <span><i class="fas fa-circle" style="color:#2ecc71; font-size:10px;"></i> Online</span>
+            </div>
+            <div style="margin-top:12px; background:rgba(255,255,255,0.02); border-radius:16px; padding:12px; border:1px solid rgba(255,255,255,0.04);">
+                <div style="color:#8899bb; font-size:12px; display:flex; justify-content:space-between;">
+                    <span>⚡ Queue: <span id="queueCount">0</span> tasks</span>
+                    <span>⏱ Avg Response: <span id="avgResponse">0</span>s</span>
+                    <span>📊 Success: <span id="successRate">100</span>%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== PANEL: INBOX ===== -->
+        <div id="panel-inbox" class="panel">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                <span style="color:#fff; font-size:16px; font-weight:600;"><i class="fas fa-inbox" style="color:#f0b90b;"></i> Notifications</span>
+                <span style="color:#8899bb; font-size:12px;" id="unreadCount">● 0 unread</span>
+            </div>
+            <div id="inboxList"></div>
+        </div>
+
+        <!-- ===== PANEL: SETTINGS ===== -->
+        <div id="panel-settings" class="panel">
+            <!-- API Keys -->
+            <div class="setting-group">
+                <span class="setting-label"><i class="fas fa-key" style="color:#f0b90b;"></i> 🔑 Groq API Keys</span>
+                <div class="setting-hint">Groq Console থেকে API Key সংগ্রহ করুন</div>
+                <input type="password" class="setting-input" id="groqKey1" placeholder="Groq API Key 1" />
+                <input type="password" class="setting-input" id="groqKey2" placeholder="Groq API Key 2 (ব্যাকআপ)" style="margin-top:6px;" />
+                <div class="setting-hint">💡 একাধিক কী দিলে রেট লিমিট ম্যানেজ হবে</div>
+            </div>
+
+            <!-- Website Connection -->
+            <div class="setting-group">
+                <span class="setting-label"><i class="fas fa-globe" style="color:#f0b90b;"></i> 🌐 Website Connection</span>
+                <div class="setting-hint">আপনার ই-কমার্স ওয়েবসাইটের লিংক ও API Key</div>
+                <input type="text" class="setting-input" id="websiteUrl" placeholder="https://your-store.com" />
+                <input type="password" class="setting-input" id="websiteApiKey" placeholder="Website API Key (যদি থাকে)" style="margin-top:6px;" />
+                <input type="text" class="setting-input" id="webhookUrl" placeholder="Webhook URL (যদি API না থাকে)" style="margin-top:6px;" />
+                <div class="setting-hint">📌 API না থাকলে Webhook ব্যবহার করুন</div>
+            </div>
+
+            <!-- Social Media -->
+            <div class="setting-group">
+                <span class="setting-label"><i class="fas fa-share-alt" style="color:#f0b90b;"></i> 📱 Social Media Profiles</span>
+                <div class="setting-hint">আপনার সোশ্যাল মিডিয়া প্রোফাইল লিংক দিন (Agent ব্রাউজ করবে)</div>
+                <input type="text" class="setting-input" id="fbLink" placeholder="Facebook Page URL" />
+                <input type="text" class="setting-input" id="igLink" placeholder="Instagram Profile URL" style="margin-top:6px;" />
+                <input type="text" class="setting-input" id="linkedinLink" placeholder="LinkedIn Profile URL" style="margin-top:6px;" />
+                <input type="text" class="setting-input" id="twitterLink" placeholder="Twitter/X Handle URL" style="margin-top:6px;" />
+                <input type="text" class="setting-input" id="tiktokLink" placeholder="TikTok Profile URL" style="margin-top:6px;" />
+            </div>
+
+            <!-- Model Selection -->
+            <div class="setting-group">
+                <span class="setting-label"><i class="fas fa-brain" style="color:#f0b90b;"></i> 🧠 Model Selection</span>
+                <div class="setting-hint">প্রতিটি এজেন্টের জন্য মডেল নির্বাচন করুন</div>
+                <div id="modelSelectGrid"></div>
+                <div class="setting-hint" style="margin-top:8px;">
+                    💡 <strong>Guidelines:</strong><br />
+                    • <span style="color:#f0b90b;">mixtral-8x7b</span> → স্মার্ট ডিসিশন (Leader, SEO, Thumbnail)<br />
+                    • <span style="color:#f0b90b;">llama-3.3-70b</span> → ক্রিয়েটিভ (Social Media, Video)<br />
+                    • <span style="color:#f0b90b;">llama-3.1-8b</span> → ফাস্ট & সস্তা (Product, Price, Order)<br />
+                    • <span style="color:#f0b90b;">gemma-7b</span> → সবচেয়ে সস্তা (Inventory Alert)
+                </div>
+            </div>
+
+            <!-- Profit Margin -->
+            <div class="setting-group">
+                <span class="setting-label"><i class="fas fa-percent" style="color:#f0b90b;"></i> 💰 Profit Margin</span>
+                <input type="range" class="profit-slider" min="5" max="50" value="10" id="profitSlider" />
+                <div class="profit-display" id="profitDisplay">10%</div>
+            </div>
+
+            <!-- Save Button -->
+            <button class="nav-tab" style="width:100%; background:linear-gradient(135deg,#f0b90b,#e6a800); color:#0a0e17; border:none; border-radius:16px; padding:14px; font-weight:700; margin-top:4px;" id="saveSettingsBtn">
+                <i class="fas fa-save"></i> 💾 সব সেটিংস সংরক্ষণ করুন
+            </button>
+            <div id="saveStatus" style="text-align:center; margin-top:8px; color:#2ecc71; font-size:13px;"></div>
+        </div>
+
+    </div><!-- end app-container -->
+
+    <script src="js/auth.js"></script>
+    <script src="js/utils/storage.js"></script>
+    <script src="js/settings/settingsUI.js"></script>
+    <script src="js/settings/modelSelector.js"></script>
+    <script src="js/providers/groq.js"></script>
+    <script src="js/providers/aiRouter.js"></script>
+    <script src="js/utils/tokenTracker.js"></script>
+    <script src="js/utils/performanceTracker.js"></script>
+    <script src="js/agents/leader.js"></script>
+    <script src="js/agents/productSourcing.js"></script>
+    <script src="js/agents/priceUpdate.js"></script>
+    <script src="js/agents/orderFulfillment.js"></script>
+    <script src="js/agents/cartRecovery.js"></script>
+    <script src="js/agents/inventoryAlert.js"></script>
+    <script src="js/agents/socialMedia.js"></script>
+    <script src="js/agents/thumbnailCourt.js"></script>
+    <script src="js/agents/videoGenerator.js"></script>
+    <script src="js/agents/seoAgent.js"></script>
+    <script src="js/router.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
